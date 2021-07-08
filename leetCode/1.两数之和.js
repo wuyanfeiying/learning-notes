@@ -1,10 +1,16 @@
 /*
- * @Author: wuyanfeiying
- * @Date: 2021-07-02 17:52:46
- * @Description: 测试
+ * @lc app=leetcode.cn id=1 lang=javascript
+ *
+ * [1] 两数之和
  */
 
-const twoSum = (sums,target)=>{
+// @lc code=start
+/**
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number[]}
+ */
+ const twoSum = (sums,target)=>{
   // 声明一个空的map映射
   const map = new Map()
   // 遍历数组
@@ -27,3 +33,5 @@ const twoSum = (sums,target)=>{
 const sums = [3,6,3,154,0,78]
 const target = 9
 console.log(twoSum(sums,target));
+// @lc code=end
+
