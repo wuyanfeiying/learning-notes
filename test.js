@@ -4,26 +4,39 @@
  * @Description: 测试
  */
 
-const twoSum = (sums,target)=>{
-  // 声明一个空的map映射
-  const map = new Map()
-  // 遍历数组
-  for(let i = 0; i < sums.length; i++){
-    // 计算目标值和当前值的差
-    const diffValue = target - sums[i]
-    // 判断 差值 是否存在映射中
-    if(map.has(diffValue)){
-      // 存在，返回结果: diffValue + sums[i] = target
-      // 通过key获取索引值，并返回
-      return [map.get(diffValue),i]
-    }
-    // 反之，存储到映射中
-    // key--> 值， value -->索引
-    map.set(sums[i],i)
+
+// 计算一个数的绝对值
+function getABS(x) {
+  console.log(x);
+  return Math.abs(x)
+}
+// console.log(getABS(-6));
+// console.log(getABS(-6));
+// console.log(getABS(-6));
+
+// 一个简易版本的记忆函数
+function memoize (func) {
+  if (typeof func != 'function') {
+    throw new TypeError('Expected a function');
   }
-  return []
+  var memoized = function() {
+    var args = arguments,
+        key = args[0],
+        cache = memoized.cache;
+
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+    var result = func.apply(this, args);
+    memoized.cache = cache.set(key, result) || cache;
+    return result;
+  };
+  memoized.cache = new Map()
+  return memoized;
 }
 
-const sums = [3,6,3,154,0,78]
-const target = 9
-console.log(twoSum(sums,target));
+const m = memoize(getABS)
+
+console.log(m(-6));
+console.log(m(-6));
+console.log(m(-6));
