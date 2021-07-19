@@ -4,39 +4,14 @@
  * @Description: 测试
  */
 
-
-// 计算一个数的绝对值
-function getABS(x) {
-  console.log(x);
-  return Math.abs(x)
-}
-// console.log(getABS(-6));
-// console.log(getABS(-6));
-// console.log(getABS(-6));
-
-// 一个简易版本的记忆函数
-function memoize (func) {
-  if (typeof func != 'function') {
-    throw new TypeError('Expected a function');
+// 比较两个数大小的纯函数
+function compareSize(b) {
+  return function (a) {
+    return a > b
   }
-  var memoized = function() {
-    var args = arguments,
-        key = args[0],
-        cache = memoized.cache;
-
-    if (cache.has(key)) {
-      return cache.get(key);
-    }
-    var result = func.apply(this, args);
-    memoized.cache = cache.set(key, result) || cache;
-    return result;
-  };
-  memoized.cache = new Map()
-  return memoized;
 }
 
-const m = memoize(getABS)
-
-console.log(m(-6));
-console.log(m(-6));
-console.log(m(-6));
+const compareNumTwo = compareSize(2)
+console.log(compareNumTwo(1)); // false
+console.log(compareNumTwo(2)); // false
+console.log(compareNumTwo(3)); // true
