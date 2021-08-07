@@ -208,3 +208,21 @@ module.exports = {
   ]
 }
 ```
+
+#### Webpack 常用插件-处理静态文件
+静态文件最终也要发布到线上，例如`favicon.ico`一般都会统一放到项目根目录下面的 `public` 目录下。
+可以借助于 `copy-webpack-plugin`
+
+```js
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+...
+module.exports = {
+  ...
+  plugins: [
+    new CopyWebpackPlugin([
+      // 打包时会将 public 目录下的文件，全部拷贝到输出目录
+      'public'
+    ])
+    ...
+  ]
+}
