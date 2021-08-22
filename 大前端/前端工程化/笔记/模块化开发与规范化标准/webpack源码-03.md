@@ -76,4 +76,75 @@ __webpack_require__.t = function (value, mode) {
   return ns;
 };
 ```
-#### 单文件懒加载源码分析1
+
+#### 单文件懒加载源码分析 1
+
+如何通过 import 动态的实现模块的懒加载:
+
+```js
+let oBtn = document.getElementById("btn");
+
+oBtn.addEventListener("click", function () {
+  import(/*webpackChunkName: "login"*/ "./login.js").then((login) => {
+    console.log(login);
+  });
+});
+
+console.log("index.js 执行了");
+```
+
+打包过程中, 打包文件里面比之前多了一下内容:
+
+- `webpackJsonpCallback`
+
+```js
+// 合并模块
+// 改变,让promise变为成功态
+function webpackJsonpCallback(data) {}
+```
+
+- `__webpack_require__.e`
+
+```js
+__webpack_require__.e = function requireEnsure(chunkId) {};
+```
+
+- `jsonpArray`
+  会重新原生的 push 方法
+
+#### 单文件懒加载源码分析 2
+
+进行懒加载,首先调用
+
+```js
+__webpack_require__.e(/*! import() | login */ "login");
+```
+
+内部核心, `jsonp` 创建一个 `script` 标签 指定 `src`, 通过 `Promise.all` 往下执行, 在执行过程中, 会动态的加载 需要的被导入的模块内容, 会调用 修改后的 `push` 方法
+
+```js
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+  ["login"],
+  {
+    "./src/login.js": function (module, exports) {
+      // 01 采用 CMS 导出模块内容
+      module.exports = "懒加载导出内容";
+    },
+  },
+]);
+```
+
+因为通过原型改变了, `push` 方法,所以会调取 `webpackJsonpCallback` 方法,
+在 `webpackJsonpCallback` 方法中, 因为前面有吧 `promise` 状态变为 成功的, 在方法中,会在执行 `resolve` 方法, 紧接着会走到 then 方法中, 接着会对内容做一些处理, 使用 `__webpack_require__.t` 方法会到处 `login.js` 中的内容
+
+```js
+.then(
+            __webpack_require__.t.bind(
+              null,
+              /*! ./login.js */ "./src/login.js",
+              7
+            )
+          )
+```
+
+最终在 `then` 中输入打印结果
