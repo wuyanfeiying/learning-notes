@@ -1,16 +1,20 @@
 /*
- * @Author: wuyanfeiying
- * @Date: 2021-07-02 17:52:46
- * @Description: 测试
+ * @Date: 2021-07-05 08:59:36
+ * @LastEditors: chuhongguang
  */
-
-function compareSize(b) {
-  return function (a) {
-    return a > b
-  }
+function add(...args) {
+  let final = [...args];
+  setTimeout(() => {
+    // final.reduce((sum, cur) => sum + cur)
+    console.log(final.reduce((sum, cur) => sum + cur));
+    // const a =  final.reduce((sum, cur) => sum + cur)
+    // console.log(a);
+  }, 0);
+  const inner = function (...args) {
+    final = [...final, ...args];
+    return inner;
+  };
+  return inner;
 }
-
-const hasThanTarget = compareSize(2)
-console.log(hasThanTarget(1)); // false
-console.log(hasThanTarget(2)); // false
-console.log(hasThanTarget(3)); // true
+// add(1)(2)(3)
+console.log(add(1)(2)(3),'55'); //6
